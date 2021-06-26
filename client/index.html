@@ -14,35 +14,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- <script>
-      const ROOM_ID = '<%= RoomId %>';
-    </script> -->
     <style>
       h1 {
         display: block;
-        /* font-size: 2em; */
-        /* margin-block-start: 0.67em; */
-        /* margin-block-end: 0.67em; */
-        /* margin-inline-start: 0px;
-         margin-inline-end: 0px; */
         font-weight: bold;
-
         font-style: italic;
       }
 
       .jumbotron {
-        /* position: relative; */
-        /* padding: 40px 20px; */
-        /* margin-top: -20px; */
-        /* margin-right: -20px; */
-        /* margin-left: -20px; */
         background-image: url('Logo.jpg');
-        /* height: 100%; */
         box-shadow: inset 0 3px 7px rgb(0 0 0 / 20%),
           inset 0 -3px 7px rgb(0 0 0 / 20%);
         text-align: center;
         text-shadow: 0 1px 3px rgb(0 0 0 / 40%), 0 0 30px rgb(0 0 0 / 8%);
-
         background: linear-gradient(45deg, #020031 0%, #6d3353 100%);
         padding: 40px 0;
         color: #fff;
@@ -95,7 +79,6 @@
         font-style: normal;
         font-weight: 500;
         font-size: 15px;
-        /* color: rgba(0, 0, 0, 0.3); */
         line-height: 30px;
       }
       .fill-one {
@@ -103,7 +86,6 @@
         border: none;
         border-radius: 4px;
         height: 6%;
-        /* margin: -40px 0 0 -140px; */
         z-index: -1;
         transition: all 0.4s ease;
       }
@@ -131,6 +113,7 @@
       </p>
       <br />
       <div class="container">
+        <!-- input of username -->
         <input
           type="text"
           id="nameInput"
@@ -141,12 +124,14 @@
         <div class="container">
           <div class="row">
             <div class="col-md-5">
+              <!-- input to create room id -->
               <input
                 type="text"
                 id="createRoomInput"
                 placeholder="Enter room id to create"
                 class="RoomId"
               />
+              <!-- calling  fucntion by click  -->
               <button onclick="createRoom()" class="btn btn-primary">
                 Create Room
               </button>
@@ -154,12 +139,14 @@
             <div class="col-md-2">OR</div>
 
             <div class="col-md-5">
+              <!-- input to join room by room id -->
               <input
                 type="text"
                 id="joinRoomInput"
                 placeholder="Enter room id to join"
                 class="RoomId"
               />
+              <!-- calling  fucntion by click  -->
               <button onclick="joinRoom()" class="btn btn-primary">
                 Join Room
               </button>
@@ -167,6 +154,7 @@
           </div>
         </div>
         <br />
+        <!-- receiving mesage from server -->
         <h3 id="message" class="pointtable"></h3>
         <br />
         <p class="des2">
@@ -211,60 +199,69 @@
         <br />
         <br />
         <hr />
+        <!-- input for specifying round -->
         <input
           type="text"
           id="roundInput"
           placeholder="Enter round number"
           class="RoomId"
         />
+        <!-- input for selling fish -->
         <input
           type="text"
           id="answerInput"
           placeholder="Enter answer 1 or 2"
           class="RoomId"
         />
+        <!-- calling function by click -->
         <button onclick="answerButton()" class="btn btn-ans">Answer</button>
         <br /><br />
 
+        <!-- calling function by click -->
         <button onclick="calculateButton()" class="fill-one">
           Calculate Profit / Loss
         </button>
 
         <br /><br />
         <h2 class="pointtable">Player's Point Table</h2>
+
+        <!-- displaying player points -->
         <h3 id="playerPoints" class="pointtable"></h3>
-        <h3 id="playerPoints" class="pointtable"></h3>
-        <h3 id="playerPoints" class="pointtable"></h3>
-        <h3 id="playerPoints" class="pointtable"></h3>
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
           var socket = io();
           var roomID = '';
           var playerName = '';
 
+          // creating a room id and  sending back to server
           function createRoom() {
             roomID = document.getElementById('createRoomInput').value;
             playerName = document.getElementById('nameInput').value;
             socket.emit('create-room', { roomID, playerName });
           }
 
+          //joining a room by sending room id to server
           function joinRoom() {
             roomID = document.getElementById('joinRoomInput').value;
             playerName = document.getElementById('nameInput').value;
             socket.emit('join-room', { roomID, playerName });
           }
 
+          //sending answer to server
           function answerButton() {
             var round = document.getElementById('roundInput').value;
             var answer = document.getElementById('answerInput').value;
             socket.emit('answer-room', { roomID, round, answer });
           }
 
+          //retrieving points from server
           function calculateButton() {
             var round = document.getElementById('roundInput').value;
             socket.emit('calculate-points', { roomID, round });
           }
 
+          //receiving name and points from server
           socket.on('receive-msg-from-server', msg => {
             console.log(msg);
             document.getElementById('playerPoints').innerHTML =
@@ -291,6 +288,7 @@
             ('\n');
           });
 
+          //receiving message from server
           socket.on('receive-msg', msg => {
             document.getElementById('message').innerHTML = msg;
           });
