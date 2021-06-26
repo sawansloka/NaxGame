@@ -13,6 +13,7 @@ class Room {
     ];
   }
 
+  //Adding player as per condition
   addNewPlayer(name, socket_id) {
     if (Object.keys(this.players).length >= 4) {
       console.log(
@@ -25,11 +26,15 @@ class Room {
     console.log('Player added successfully !!');
   }
 
+  //answer of each round  by each player
   answerToRound(socket_id, round, answer) {
     var player = this.players[socket_id];
+
+    //calling function from player to add Answer
     player.addAnswer(round, answer);
   }
 
+  //calculation of point
   calculatePoints(round) {
     var answers = [];
     for (var i of Object.keys(this.players)) {
@@ -59,6 +64,7 @@ class Room {
       }
     }
 
+    //multiplying points by factor of 10 for 7th and 8th round
     for (var i in answers) {
       if (answers[i] == 1) {
         if (round == 7 || round == 8) {
